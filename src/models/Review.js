@@ -5,6 +5,7 @@ const ReviewSchema = Schema({
     type: String,
     required: true,
   },
+
   description: {
     type: String,
     required: true,
@@ -14,6 +15,7 @@ const ReviewSchema = Schema({
     type: String,
     required: true,
   },
+
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -26,6 +28,5 @@ ReviewSchema.method('toJSON', function() {
     object.id = _id;
     return object;
 })
-
 
 module.exports = model("Review", ReviewSchema);

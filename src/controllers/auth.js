@@ -1,19 +1,19 @@
 const { response } = require("express");
 const bcrypt = require("bcryptjs");
+
 const User = require("../models/User");
-const { generateJWT } = require('../helpers/jwt');
+const { generateJWT } = require("../helpers/jwt");
 
 const createUser = async (req, res = response) => {
   const { email, password } = req.body;
 
   try {
     let user = await User.findOne({ email });
-    console.log(user);
 
     if (user) {
       return res.status(400).json({
         ok: false,
-        msg: "Un usuario existe con ese correo",
+        msg: "A user exists with this email",
       });
     }
     user = new User(req.body);
@@ -26,42 +26,36 @@ const createUser = async (req, res = response) => {
 
     //Generate JWT
     const token = await generateJWT(user.id, user.name);
-    let userToReturn = {}
+    let userToReturn = {};
     userToReturn.uid = user.id;
     userToReturn.name = user.name;
     console.log(userToReturn);
-   
 
     res.status(201).json({
       user: userToReturn,
-      token
+      token,
     });
   } catch (error) {
     res.status(500).json({
       ok: false,
-      msg: "Por favor hable con el administrador",
+      msg: "Please, talk with the administrator",
     });
   }
 };
 
-
-const loginUser = async(req, res = response) => {
-
+const loginUser = async (req, res = response) => {
   const { email, password } = req.body;
- console.log({email,password}, 'body backend');
 
   try {
-
     const user = await User.findOne({ email });
-    console.log(user);
     if (!user) {
-        return res.status(400).json({
-          ok: false,
-          msg: "Un usuario no existe con ese correo",
-        });
-      }
+      return res.status(400).json({
+        ok: false,
+        msg: "A user exists with this email",
+      });
+    }
 
-     //Password confirm
+    //Password confirm
     const validPassword = bcrypt.compareSync(password, user.password);
 
     if (!validPassword) {
@@ -71,47 +65,41 @@ const loginUser = async(req, res = response) => {
       });
     }
 
-     //Generate JWT
-     const token = await generateJWT(user.id, user.name);
-     let userToReturn = {}
-     userToReturn.uid = user.id;
-     userToReturn.name = user.name;
-     console.log(userToReturn);
-
-    res.json({
-        user: userToReturn,
-        token
-    })
-
-
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-        ok: false,
-        msg: "Por favor hable con el administrador",
-      });
-  }
-
-};
-
-
-
-//Function to renew token
-const renewToken = async (req, res = response) => {
-  console.log('ban1');
-    const { uid, name } = req;
-    const token = await generateJWT(uid, name);
-    console.log('ban2');
-    let userToReturn = {}
-    userToReturn.uid = uid;
-    userToReturn.name = name;
+    //Generate JWT
+    const token = await generateJWT(user.id, user.name);
+    let userToReturn = {};
+    userToReturn.uid = user.id;
+    userToReturn.name = user.name;
     console.log(userToReturn);
-    console.log('ban3');
+
     res.json({
       user: userToReturn,
       token,
     });
-  };
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Please, talk with the administrator",
+    });
+  }
+};
+
+//Function to renew token
+const renewToken = async (req, res = response) => {
+
+  const { uid, name } = req;
+  const token = await generateJWT(uid, name);
+  
+  let userToReturn = {};
+  userToReturn.uid = uid;
+  userToReturn.name = name;
+
+  res.json({
+    user: userToReturn,
+    token,
+  });
+};
 
 module.exports = {
   createUser,

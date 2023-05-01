@@ -20,17 +20,13 @@ app.use(express.static('public'));
 // Reading and parsing the body
 app.use( express.json());
 
+// Using Morgan to debug
 app.use(morgan('tiny'));
 
 //Routes
 app.use('/api/auth', require('./src/routes/auth'));
-//CRUD: Review
 app.use('/api/reviews', require('./src/routes/reviews'));
 
-app.use((req, res, next)=> {
-    console.log('I run on every request!');
-    next();
-  });
 
 //Listen to request
 app.listen(process.env.PORT || 3000, () => {
