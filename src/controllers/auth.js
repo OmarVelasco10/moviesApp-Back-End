@@ -48,7 +48,7 @@ const createUser = async (req, res = response) => {
 const loginUser = async(req, res = response) => {
 
   const { email, password } = req.body;
- 
+ console.log({email,password}, 'body backend');
 
   try {
 
@@ -98,12 +98,15 @@ const loginUser = async(req, res = response) => {
 
 //Function to renew token
 const renewToken = async (req, res = response) => {
+  console.log('ban1');
     const { uid, name } = req;
     const token = await generateJWT(uid, name);
+    console.log('ban2');
     let userToReturn = {}
     userToReturn.uid = uid;
     userToReturn.name = name;
     console.log(userToReturn);
+    console.log('ban3');
     res.json({
       user: userToReturn,
       token,
