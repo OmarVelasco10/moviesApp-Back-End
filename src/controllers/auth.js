@@ -13,7 +13,7 @@ const createUser = async (req, res = response) => {
     if (user) {
       return res.status(400).json({
         ok: false,
-        msg: "A user exists with this email",
+        msg: "An user exists with this email",
       });
     }
     user = new User(req.body);
@@ -29,7 +29,6 @@ const createUser = async (req, res = response) => {
     let userToReturn = {};
     userToReturn.uid = user.id;
     userToReturn.name = user.name;
-    console.log(userToReturn);
 
     res.status(201).json({
       user: userToReturn,
@@ -51,7 +50,7 @@ const loginUser = async (req, res = response) => {
     if (!user) {
       return res.status(400).json({
         ok: false,
-        msg: "A user exists with this email",
+        msg: "An user exists with this email",
       });
     }
 
@@ -70,7 +69,6 @@ const loginUser = async (req, res = response) => {
     let userToReturn = {};
     userToReturn.uid = user.id;
     userToReturn.name = user.name;
-    console.log(userToReturn);
 
     res.json({
       user: userToReturn,
